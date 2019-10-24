@@ -26,6 +26,14 @@ class Person(models.Model):
             self.last_name, self.first_name, self.born)
 
 
+class MovieManager(models.Manager):
+    def all_with_related_person(self):
+        qs = self.get_queryset()
+        qs = qs.select_related('director')
+        qs = qs.prefetch_related('writers', 'actors')
+        return qs
+
+
 class Movie(models.Model):
     NOT_RATED = 0
     RATED_G = 1
@@ -50,6 +58,8 @@ class Movie(models.Model):
         Person, related_name='writing_credits', blank=True)
     actors = models.ManyToManyField(
         Person, through='Role', related_name='acting_credits', blank=True)
+    
+    objects = MovieManager()
 
     class Meta:
         ordering = ('-year', 'title')
