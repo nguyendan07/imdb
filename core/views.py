@@ -13,4 +13,4 @@ class MovieList(ListView):
 
 
 class MovieDetail(DetailView):
-    model = Movie
+    queryset = Movie.objects.all_with_related_person()
