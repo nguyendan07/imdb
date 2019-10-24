@@ -1,6 +1,10 @@
 from django.views.generic import (ListView, DetailView)
 
-from .models import Movie
+from .models import Person, Movie
+
+
+class PersonDetail(DetailView):
+    queryset = Person.objects.all_with_prefetch_movies()
 
 
 class MovieList(ListView):
