@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.urls.base import reverse
 from django.views.generic import (CreateView, DetailView, ListView, UpdateView)
 
-from .forms import VoteForm
+from .forms import (MovieImageForm, VoteForm)
 from .models import Movie, Person, Vote
 
 
@@ -35,6 +35,11 @@ class MovieDetail(DetailView):
             ctx['vote_form'] = vote_form
             ctx['vote_form_url'] = vote_form_url
         return ctx
+    
+    def movie_image_form(self):
+        if self.request.user.is_authenticated:
+            return MovieImageForm()
+        return None
 
 
 class CreateVote(LoginRequiredMixin, CreateView):
