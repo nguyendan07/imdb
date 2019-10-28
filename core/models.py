@@ -40,6 +40,14 @@ class MovieManager(models.Manager):
         qs = self.all_with_related_person()
         qs = qs.annotate(score=Sum('vote__value'))
         return qs
+    
+    def top_views(self, limit=10):
+        qs = self.get_queryset()
+        qs = qs.annotate(vote_sum=Sum('vote__value'))
+        qs = qs.exclude(vote_sum=None)
+        qs = qs.order_by('-vote_sum')
+        qs = qs[:limit]
+        return qs
 
 
 class Movie(models.Model):
