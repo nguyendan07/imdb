@@ -90,6 +90,11 @@ class CreateVote(LoginRequiredMixin, CreateView):
         return redirect(movie_detail_url)
 
 
+class TopMovies(ListView):
+    template_name = 'core/top_movies_list.html'
+    queryset = Movie.objects.top_views(limit=10)
+
+
 class UpdateVote(LoginRequiredMixin, UpdateView):
     form_class = VoteForm
     queryset = Vote.objects.all()
