@@ -1,5 +1,8 @@
+import django
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.core.cache import cache
 from django.shortcuts import redirect
 from django.urls.base import reverse
 from django.views.generic import (CreateView, DetailView, ListView, UpdateView)
@@ -93,7 +96,18 @@ class CreateVote(LoginRequiredMixin, CreateView):
 
 class TopMovies(ListView):
     template_name = 'core/top_movies_list.html'
-    queryset = Movie.objects.top_views(limit=10)
+    
+    def get_queryset(self):
+        limit = 10
+        key = 'top_movies_%s' % limit
+        cached_qs = cache.get(key)
+        if cached_qs:
+            same_django = cached_qs._django_version == django.get_version()
+            if same_django:
+                return cached_qs
+        qs = Movie.objects.top_views(limit=limit)
+        cache.set(key, qs)
+        return qs    
 
 
 class UpdateVote(LoginRequiredMixin, UpdateView):
