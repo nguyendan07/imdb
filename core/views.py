@@ -5,6 +5,7 @@ from django.urls.base import reverse
 from django.views.generic import (CreateView, DetailView, ListView, UpdateView)
 
 from .forms import (MovieImageForm, VoteForm)
+from .mixins import CachePageVaryOnCookieMixin
 from .models import Movie, Person, Vote
 
 
@@ -12,7 +13,7 @@ class PersonDetail(DetailView):
     queryset = Person.objects.all_with_prefetch_movies()
 
 
-class MovieList(ListView):
+class MovieList(CachePageVaryOnCookieMixin, ListView):
     model = Movie
     paginate_by = 10
 

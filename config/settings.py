@@ -137,3 +137,5 @@ CACHES = {
         'TIMEOUT': 5, # 5 seconds
     }
 }
+
+CSRF_USE_SESSIONS = True
